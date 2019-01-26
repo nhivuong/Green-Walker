@@ -1,17 +1,19 @@
-var fs=require('fs');
-var data=fs.readFileSync('words.json', 'utf8');
-var words=JSON.parse(data);
-var bodyparser=require('body-parser');
-console.log(words);
-var express=require('express');
-
-var app=express();
-
-var server=app.listen(3030,listening);
-
-function listening(){
-console.log("listening..");
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
 }
-app.use(express.static('website'));
-app.use(bodyparser.urlencoded({extended:false}));
-app.use(bodyparser.json());
+
+//usage:
+readTextFile("test.json", function(text){
+    var data = JSON.parse(text);
+    var distance = data.routes[0].legs[0].distance.value;
+    var duration = data.routes[0].legs[0].duration.value;
+    console.log(duration);
+});
