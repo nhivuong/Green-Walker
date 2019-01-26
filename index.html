@@ -8,7 +8,9 @@ x <!DOCTYPE html>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        height: 100%;
+        float: right;
+        height: 70%;
+        width: 70%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -87,7 +89,8 @@ x <!DOCTYPE html>
       function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
           mapTypeControl: false,
-          center: {lat: -33.8688, lng: 151.2195},
+          //This building 45.4951033,-73.5788456
+          center: {lat: 45.4951033, lng: -73.5788456},
           zoom: 13
         });
 
