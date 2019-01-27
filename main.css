@@ -6,6 +6,12 @@
   display:grid;
   border-radius: 40px;
 }
+#poem{
+  font-size: 23px;
+  font-weight: 200;
+  font-family: 'Homemade Apple', cursive;
+  line-height: 150%;
+}
 #container{
   display: grid;
 	grid-template-columns: 3fr 7fr;

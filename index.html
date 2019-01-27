@@ -9,11 +9,16 @@
         async defer></script>
     <link rel="stylesheet" href="main.css" type="text/css"/>
     <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Homemade+Apple" rel="stylesheet">
   </head>
   <body>
     <div id="container">
         <h1>Green-Walker</h1>
         <h3 id="output">
+          <span id="poem">“The future will either<br/>
+              be green, or not at all ..." <br/> - Bob Brown<br/>
+              
+              </span>
           <span id="display-if-walking" style="display:none"> Congratulations! Thank you for saving the planet with us!
            You will reach your destination in <span id="walking-time"></span>, and your walking distance will be 
           <span id="walking-distance"></span> with ZERO carbon dioxide emission ! </span>
@@ -132,18 +137,20 @@
           if (status === 'OK') {
             me.directionsDisplay.setDirections(response);
             var point = response.routes[ 0 ].legs[ 0 ];
-            
+            document.getElementById("poem").style.display = "none";
             document.getElementById("walking-time").innerHTML = point.duration.text;
             document.getElementById("walking-distance").innerHTML = point.distance.text;
-            document.getElementById("option").innerHTML = point.steps[0].travel_mode;
+            
 
             if (document.getElementById("changemode-walking").checked) {
+              document.getElementById("option").innerHTML = "Walking";
               document.getElementById("hide-if-walking").style.display = "none";
               document.getElementById("display-if-walking").style.display = "block";
               document.getElementById("always-hide").innerHTML = point.duration.value;
               walky_distance=point.distance.text;
               walky_duration=point.duration.text;
             }  else {
+              
               document.getElementById("display-if-walking").style.display = "none";
               document.getElementById("hide-if-walking").style.display = "block";
               document.getElementById("time").innerHTML = point.duration.text;
@@ -153,9 +160,13 @@
                 document.getElementById("calories") .innerHTML = walky_duration * 1.5;
                 
                 if (document.getElementById("changemode-transit").checked){
+                  //for bus
+                  document.getElementById("option").innerHTML = "Public transportation";
                   document.getElementById("co2") .innerHTML = Math.round(point.distance.value * 0.031);
                 }
                 else{
+                  //for car driving
+                  document.getElementById("option").innerHTML = "Driving";
                   document.getElementById("co2") .innerHTML = Math.round(point.distance.value * 0.118);
                 }
               
