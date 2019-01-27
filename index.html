@@ -14,11 +14,19 @@
     <div id="container">
         <h1>Green-Walker</h1>
         <h3 id="output">
-          <span id="option">N/A</span> takes you <span id="time">N/A</span> to get
-          to your destination, which only saves you <span id="time-difference"> N/A </span>
-          compared to <span id="alternative"> N/A</span>! If you choose to <span id="alt-verb">
-          N/A </span>, you will <span id="display-if-walking">burn <span id="calories"> N/A</span>
-        calories, and</span> emit <span id="co2"> N/A </span> grams less Carbon Dioxide.
+          <span id="display-if-walking" style="display:none"> Congratulations! Thank you for saving the planet with us!
+           You will reach your destination in <span id="walking-time"></span>, and your walking distance will be 
+          <span id="walking-distance"></span> with ZERO carbon dioxide emission ! </span>
+
+          <span id="always-hide" style="display:none"></span>
+
+          <span id="hide-if-walking" style="display:none">
+              <span id="option">N/A</span> takes you <span id="time">N/A</span> to get
+          to your destination, which only saves you <span id="time-difference"> N/A </span> minutes
+          compared to <span id="alternative"> N/A</span>! If you choose to walk, you will burn <span id="calories"> N/A</span>
+        calories, and emit <span id="co2"> N/A </span> <span id="g">grams</span> less of Greenhouse Gas!
+          </span>
+          
         </h3>
         <img src="leaf.jpg" id = "leaf"/>
         <input id="origin-input" class="controls" type="text"
@@ -47,7 +55,6 @@
       // This example requires the Places library. Include the libraries=places
       // parameter when you first load the API. For example:
     //<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSFkJ2rqIsyeLid-d1WDqh76CKBxO9gyc&callback&libraries=places">
-
       function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
           mapTypeControl: false,
@@ -55,10 +62,8 @@
           center: {lat: 45.4951033, lng: -73.5788456},
           zoom: 13
         });
-
         new AutocompleteDirectionsHandler(map);
       }
-
        /**
         * @constructor
        */
@@ -73,24 +78,19 @@
         this.directionsService = new google.maps.DirectionsService;
         this.directionsDisplay = new google.maps.DirectionsRenderer;
         this.directionsDisplay.setMap(map);
-
         var originAutocomplete = new google.maps.places.Autocomplete(
             originInput, {placeIdOnly: true});
         var destinationAutocomplete = new google.maps.places.Autocomplete(
             destinationInput, {placeIdOnly: true});
-
         this.setupClickListener('changemode-walking', 'WALKING');
         this.setupClickListener('changemode-transit', 'TRANSIT');
         this.setupClickListener('changemode-driving', 'DRIVING');
-
         this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
         this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
-
         this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
         this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
         this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
       }
-
       // Sets a listener on a radio button to change the filter type on Places
       // Autocomplete.
       AutocompleteDirectionsHandler.prototype.setupClickListener = function(id, mode) {
@@ -101,7 +101,6 @@
           me.route();
         });
       };
-
       AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(autocomplete, mode) {
         var me = this;
         autocomplete.bindTo('bounds', this.map);
@@ -114,18 +113,17 @@
           if (mode === 'ORIG') {
             me.originPlaceId = place.place_id;
           } else {
-            me.destinationPlaceId = place.place_id;
+            me.destinationPlaceId = place.place_id; 
           }
           me.route();
         });
-
       };
-
       AutocompleteDirectionsHandler.prototype.route = function() {
         if (!this.originPlaceId || !this.destinationPlaceId) {
           return;
         }
         var me = this;
+        var walky_distance, walky_duration;
         this.directionsService.route({
           origin: {'placeId': this.originPlaceId},
           destination: {'placeId': this.destinationPlaceId},
@@ -133,6 +131,37 @@
         }, function(response, status) {
           if (status === 'OK') {
             me.directionsDisplay.setDirections(response);
+            var point = response.routes[ 0 ].legs[ 0 ];
+            
+            document.getElementById("walking-time").innerHTML = point.duration.text;
+            document.getElementById("walking-distance").innerHTML = point.distance.text;
+            document.getElementById("option").innerHTML = point.steps[0].travel_mode;
+
+            if (document.getElementById("changemode-walking").checked) {
+              document.getElementById("hide-if-walking").style.display = "none";
+              document.getElementById("display-if-walking").style.display = "block";
+              document.getElementById("always-hide").innerHTML = point.duration.value;
+              walky_distance=point.distance.text;
+              walky_duration=point.duration.text;
+            }  else {
+              document.getElementById("display-if-walking").style.display = "none";
+              document.getElementById("hide-if-walking").style.display = "block";
+              document.getElementById("time").innerHTML = point.duration.text;
+              walky_duration = parseInt(document.getElementById("always-hide").innerHTML);
+                document.getElementById("time-difference").innerHTML = Math.round((- point.duration.value + walky_duration)/60) ;
+                document.getElementById("alternative") .innerHTML = "WALKING";
+                document.getElementById("calories") .innerHTML = walky_duration * 1.5;
+                
+                if (document.getElementById("changemode-transit").checked){
+                  document.getElementById("co2") .innerHTML = point.distance.value * 0.031;
+                }
+                else{
+                  document.getElementById("co2") .innerHTML = point.distance.value * 0.118;
+                }
+              
+            }
+            //steps.travel_mode
+
           } else {
             window.alert('Directions request failed due to ' + status);
           }
@@ -143,4 +172,4 @@
     async defer></script>
     <script src="api_request.js" async defer></script>
   </body>
-</html>
+  </html>
