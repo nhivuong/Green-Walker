@@ -153,10 +153,10 @@
                 document.getElementById("calories") .innerHTML = walky_duration * 1.5;
                 
                 if (document.getElementById("changemode-transit").checked){
-                  document.getElementById("co2") .innerHTML = point.distance.value * 0.031;
+                  document.getElementById("co2") .innerHTML = Math.round(point.distance.value * 0.031);
                 }
                 else{
-                  document.getElementById("co2") .innerHTML = point.distance.value * 0.118;
+                  document.getElementById("co2") .innerHTML = Math.round(point.distance.value * 0.118);
                 }
               
             }
