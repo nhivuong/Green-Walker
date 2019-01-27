@@ -28,27 +28,37 @@ function readTextFile(link, callback) {
     rawFile.send(null);
 }
 
-readTextFile(link1, function(text){
+    distance = readTextFile(link1, function(text){
     var data1 = JSON.parse(text);
-    distance = data.routes[0].legs[0].distance.value;
-    walkDuration = data.routes[0].legs[0].duration.value;
-    console.log(duration);
-
+    //distance = data1.routes[0].legs[0].distance.value;
+    //walkDuration = data1.routes[0].legs[0].duration.value;
+    console.log(walkDuration);
+    return data1.routes[0].legs[0].distance.value;
 });
 
-readTextFile(link2, function(text){
+
+walkDuration = readTextFile(link1, function(text){
+    var data1 = JSON.parse(text);
+    //distance = data1.routes[0].legs[0].distance.value;
+    //walkDuration = data1.routes[0].legs[0].duration.value;
+    console.log(walkDuration);
+    return data1.routes[0].legs[0].duration.value;
+});
+
+driveDuration = readTextFile(link2, function(text){
     var data2 = JSON.parse(text);
   //  distance = data.routes[0].legs[0].distance.value;
-    driveDuration = data.routes[0].legs[0].duration.value;
-    console.log(duration);
+   // driveDuration = data2.routes[0].legs[0].duration.value;
+    console.log(driveDuration);
+    return data2.routes[0].legs[0].duration.value;
 
 });
 
-readTextFile(link3, function(text){
+transitDuration = readTextFile(link3, function(text){
     var data3 = JSON.parse(text);
-   transitDuration = data.routes[0].legs[0].duration.value;
-    console.log(duration);
-
+    //transitDuration = data3.routes[0].legs[0].duration.value;
+    console.log(transitDuration);
+    return data3.routes[0].legs[0].duration.value;
 });
 
 
@@ -58,15 +68,18 @@ function damage_rate(distance , time , dam_rate){
 function calorie_count(time){
 	return time*1.5;
 }
+
 var dam_car = 1;
 var dam_bus = 2*dam_car;
-if (dis <= 2000){
+if (distance <= 2000){
     console.log("WuuuuuuuHuuuuuu Calorie Count for walk : " + calorie_count(walkDuration));
-    console.log("Damage rate for bus : " + (damage_rate(dis, transitDuration, dam_bus ))/30);
-    console.log("Damage rate for car : " + damage_rate(dis, driveDuration, dam_car) + " which is : " + damage_rate(dis, driveDuration, dam_car)/((damage_rate(dis, transitDuration, dam_bus ))/30) + " times of bus");
+    console.log("Damage rate for bus : " + (damage_rate(distance, transitDuration, dam_bus ))/30);
+    console.log("Damage rate for car : " + damage_rate(distance, driveDuration, dam_car) + " which is : " + damage_rate(distance, driveDuration, dam_car)/((damage_rate(distance, transitDuration, dam_bus ))/30) + " times of bus");
 }
 else{
     console.log("WuuuuuuuHuuuuuu Calorie Count for walk : " + calorie_count(walkDuration));
-    console.log("Damage rate for bus : " + (damage_rate(dis, transitDuration, dam_bus ))/30);
-    consoel.log("Damage rate for car : " + damage_rate(dis, driveDuration, dam_car) + " which is : " + damage_rate(dis, driveDuration, dam_car)/((damage_rate(dis, transitDuration, dam_bus ))/30) + " times of bus");
+    console.log("Damage rate for bus : " + (damage_rate(distance, transitDuration, dam_bus ))/30);
+    console.log("Damage rate for car : " + damage_rate(distance, driveDuration, dam_car) + " which is : " + damage_rate(distance, driveDuration, dam_car)/((damage_rate(distance, transitDuration, dam_bus ))/30) + " times of bus");
 }
+
+console.log(walkDuration);
